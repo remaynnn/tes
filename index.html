@@ -128,28 +128,96 @@ h2{
     width:300px;
     height:200px;
     margin-top:20px;
+    
 }
+/* ===== ENVELOPE DARK LUXURY ===== */
+.envelope-wrapper{
+    position:relative;
+    width:340px;
+    height:230px;
+    margin-top:40px;
+    perspective:1400px;
+}
+
+/* BODY */
 .envelope{
     position:absolute;
     width:100%;
-    height:180px;
-    background:#f8e7ea;
-    border-radius:10px;
-    box-shadow:0 30px 80px rgba(0,0,0,.8);
+    height:200px;
+    border-radius:18px;
+    background:linear-gradient(145deg,#0f0f0f,#1c1c1c);
+    box-shadow:
+        0 50px 120px rgba(0,0,0,.85),
+        inset 0 0 30px rgba(255,215,0,.05);
     cursor:pointer;
     overflow:hidden;
+    transition:.6s ease;
     z-index:3;
 }
+
+/* GOLD BORDER GLOW */
+.envelope::before{
+    content:"";
+    position:absolute;
+    inset:0;
+    border-radius:18px;
+    padding:1.5px;
+    background:linear-gradient(135deg,#d4af37,#ffd700,#b8860b);
+    -webkit-mask:
+        linear-gradient(#000 0 0) content-box,
+        linear-gradient(#000 0 0);
+    -webkit-mask-composite:xor;
+    mask-composite:exclude;
+    pointer-events:none;
+}
+
+/* SHINE SWEEP */
+.envelope::after{
+    content:"";
+    position:absolute;
+    top:0;
+    left:-60%;
+    width:50%;
+    height:100%;
+    background:linear-gradient(
+        120deg,
+        rgba(255,255,255,.15),
+        transparent
+    );
+    transform:skewX(-25deg);
+    transition:1s;
+}
+.envelope:hover::after{
+    left:140%;
+}
+
+/* FLAP */
 .flap{
     position:absolute;
     width:100%;
     height:100%;
-    background:#eac8cf;
-    clip-path:polygon(0 0,100% 0,50% 60%);
+    background:linear-gradient(145deg,#151515,#262626);
+    clip-path:polygon(0 0,100% 0,50% 65%);
     transform-origin:top;
-    transition:1s cubic-bezier(.22,1,.36,1);
+    transition:1.2s cubic-bezier(.22,1,.36,1);
     z-index:4;
+    box-shadow:0 15px 40px rgba(0,0,0,.6);
 }
+
+/* GOLD LINE DETAIL */
+.flap::after{
+    content:"";
+    position:absolute;
+    bottom:15px;
+    left:25%;
+    width:50%;
+    height:2px;
+    background:linear-gradient(90deg,#d4af37,#ffd700,#d4af37);
+    border-radius:3px;
+    opacity:.7;
+}
+
+/* OPEN ANIMATION */
 .envelope-wrapper.open .flap{
     transform:rotateX(180deg);
 }
@@ -174,17 +242,18 @@ h2{
     object-fit:cover;
 }
 .envelope-wrapper.open .photo{
-    top:-200px;
+    top:-170px;
     transform:translate(-50%,0) scale(1);
     opacity:1;
     z-index:5;
+    
 }
 
 /* TEXT */
 .text1{
-    margin-top:40px;
-    max-width:400px;
-    font-weight:300;
+    margin-top:35px;
+    max-width:350px;
+    font-weight:280;
     line-height:1.6;
     opacity:0;
     transform:translateY(20px);
@@ -306,6 +375,99 @@ h2{
     color:#b71c1c;
     cursor:pointer;
 }
+/* ===== CUTE FLOWERS ===== */
+.cute-decor{
+    position:absolute;
+    width:100%;
+    height:100%;
+    top:0;
+    left:0;
+    pointer-events:none;
+    z-index:20; /* biar pasti di atas */
+}
+
+.flower{
+    position:absolute;
+    font-size:60px; /* BESAR biar jelas */
+    opacity:0;
+    transition:1s ease;
+}
+
+.flower.left{
+    left:-40px;
+    top:70px;
+}
+
+.flower.right{
+    right:-40px;
+    top:70px;
+}
+
+/* muncul saat amplop dibuka */
+.envelope-wrapper.open .flower{
+    opacity:1;
+    transform:scale(1.2);
+}
+
+
+@keyframes floatSparkle{
+    from{ transform:translateY(-10px); }
+    to{ transform:translateY(10px); }
+}
+
+/* ACTIVE STATE */
+.envelope-wrapper.open .big-glow{
+    opacity:1;
+}
+
+.envelope-wrapper.open .floral{
+    opacity:1;
+    transform:translateY(-10px);
+}
+
+.envelope-wrapper.open .sparkle-layer{
+    opacity:.6;
+}
+
+/* ===== Birthday Button ===== */
+.birthday-btn{
+    margin-top:15px;
+    padding:8px 22px;
+    border-radius:25px;
+    border:1px solid rgba(255,255,255,.3);
+    background:rgba(255,255,255,.05);
+    color:white;
+    font-size:14px;
+    cursor:pointer;
+    backdrop-filter:blur(10px);
+    transition:.4s;
+}
+
+.birthday-btn:hover{
+    background:rgba(255,255,255,.15);
+    box-shadow:0 0 15px rgba(255,255,255,.3);
+    transform:scale(1.05);
+}
+
+/* ===== Hidden Message ===== */
+.birthday-message{
+    margin-top:15px;
+    max-width:500px;
+    opacity:0;
+    transform:translateY(15px);
+    transition:all .8s cubic-bezier(.22,1,.36,1);
+    line-height:1.6;
+    font-size:15px;
+    color:#f5f5f5;
+}
+
+/* Show Animation */
+.birthday-message.show{
+    opacity:1;
+    transform:translateY(0);
+}
+
+
 </style>
 </head>
 
@@ -317,22 +479,36 @@ h2{
 
 <!-- SLIDE 1 -->
 <div class="slide active">
-    <h2>TES</h2>
+    <h2>PIYO</h2>
 
     <div class="envelope-wrapper" id="wrapper">
         <div class="envelope" onclick="toggleEnvelope()">
+            
             <div class="flap"></div>
         </div>
+
+<!-- CUTE FLOWERS -->
+<div class="cute-decor">
+    <div class="flower left">🌸</div>
+    <div class="flower right">🌸</div>
+</div>
+
+
+
         <div class="photo">
             <img src="foto.jpeg">
         </div>
     </div>
 
     <div class="text1">
-TES TES TES
-    </div>
+   "Kalau semesta punya cara mempertemukan dua orang,  
+mungkin ini salah satunya.  Di antara miliaran kemungkinan,  
+aku tetap berakhir memilih mu.  Dan setiap hari setelahnya,  
+aku tidak pernah menyesal."   
+</div>
 
-    <div class="nav right" onclick="nextSlide()">➜</div>
+
+    <div class="nav right" onclick="nextSlide()">❯❯</div>
 </div>
 
 <!-- SLIDE 2 -->
@@ -351,18 +527,31 @@ TES TES TES
     </button>
 
 
-    <div class="nav left" onclick="prevSlide()">⬅</div>
-    <div class="nav right" onclick="nextSlide()">➜</div>
+    <div class="nav left" onclick="prevSlide()">❮❮</div>
+    <div class="nav right" onclick="nextSlide()">❯❯</div>
 </div>
 
 <!-- SLIDE 3 -->
 <div class="slide">
-    <h2>Invitation 🍷</h2>
-    <p>📍 </p>
-    <p>🗓 29 Februari 2026</p>
-    <p>⏰ 19.00 WIB</p>
+    <h2> Enjoy ur Day 🍷</h2>
+    <p>📍 Medan City </p>
+    <p>🗓 14, 16 Februari 2026</p>
+    <p>⏰ Menyesuaikan WIB</p>
 
-    <div class="nav left" onclick="prevSlide()">⬅</div>
+<button class="birthday-btn" id="birthdayBtn">
+    🎁 Untuk Nanti
+</button>
+
+<div class="birthday-message" id="birthdayMessage">
+    "Dihari bertambah usiamu nanti yang makin dewasa, tetap saja di mataku piyo si paling gemas yang suka ngambek.
+    Semoga langkahmu selalu ringan, hatimu selalu dijaga, dan semua hal baik berbaris rapi menghampirimu.
+    Terima kasih sudah hadir dan membuat hidupku lebih berwarna dari yang pernah kubayangkan.
+    Cinta bukan tentang yang paling mewah, tapi tentang siapa yang tetap tinggal saat dunia terasa sederhana."
+</div>
+
+  
+
+    <div class="nav left" onclick="prevSlide()">❮❮</div>
 </div>
 
 <audio id="music" loop>
@@ -441,6 +630,17 @@ function toggleMusic(){
 
 
 }
+document.addEventListener("DOMContentLoaded", function(){
+
+    const btn = document.getElementById("birthdayBtn");
+    const message = document.getElementById("birthdayMessage");
+
+    btn.addEventListener("click", function(){
+        message.classList.toggle("show");
+    });
+
+});
+
 </script>
 
 </body>
