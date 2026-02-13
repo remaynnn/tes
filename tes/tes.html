@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TES</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=Poppins:wght@300;400&display=swap" rel="stylesheet">
+
+<style>
+    /* Slide 2 Romantic Theme */
+.slide:nth-child(2){
+    background:linear-gradient(135deg,#7b0000,#b71c1c);
+}
+
+.play-btn{
+    margin-top:30px;
+    padding:12px 30px;
+    border:none;
+    border-radius:30px;
+    background:white;
+    color:#b71c1c;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s;
+}
+
+.play-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 20px rgba(255,255,255,.5);
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:'Poppins',sans-serif;
+    background:#0b0f2a;
+    overflow:hidden;
+    color:white;
+}
+
+/* ===== BACKGROUND ===== */
+.universe{
+    position:fixed;
+    width:100%;
+    height:100%;
+    z-index:0;
+}
+.stars{
+    position:absolute;
+    width:200%;
+    height:200%;
+    background:radial-gradient(white 1px, transparent 2px);
+    background-size:45px 45px;
+    opacity:.15;
+    animation:moveStars 150s linear infinite;
+}
+@keyframes moveStars{
+    from{transform:translate(0,0);}
+    to{transform:translate(-900px,-900px);}
+}
+
+.blur-bg{
+    position:fixed;
+    width:100%;
+    height:100%;
+    backdrop-filter:blur(0px);
+    transition:1s;
+    z-index:1;
+}
+.blur-bg.active{
+    backdrop-filter:blur(6px);
+}
+
+/* ===== CINEMATIC FLASH ===== */
+.transition-overlay{
+    position:fixed;
+    width:100%;
+    height:100%;
+    background:white;
+    opacity:0;
+    pointer-events:none;
+    z-index:10;
+    transition:opacity .6s ease;
+}
+.transition-overlay.active{
+    opacity:.25;
+}
+
+/* ===== SLIDE ===== */
+.slide{
+    position:absolute;
+    width:100%;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-direction:column;
+    text-align:center;
+    transition:
+        opacity 1s cubic-bezier(.22,1,.36,1),
+        transform 1s cubic-bezier(.22,1,.36,1),
+        filter .8s ease;
+    opacity:0;
+    transform:scale(.95);
+    pointer-events:none;
+    z-index:2;
+}
+.slide.active{
+    opacity:1;
+    transform:scale(1);
+    pointer-events:auto;
+}
+.slide.exit{
+    opacity:0;
+    transform:scale(1.08);
+    filter:blur(6px);
+}
+
+h2{
+    font-family:'Playfair Display';
+    font-size:38px;
+    margin-bottom:20px;
+}
+
+/* ===== ENVELOPE ===== */
+.envelope-wrapper{
+    position:relative;
+    width:300px;
+    height:200px;
+    margin-top:20px;
+}
+.envelope{
+    position:absolute;
+    width:100%;
+    height:180px;
+    background:#f8e7ea;
+    border-radius:10px;
+    box-shadow:0 30px 80px rgba(0,0,0,.8);
+    cursor:pointer;
+    overflow:hidden;
+    z-index:3;
+}
+.flap{
+    position:absolute;
+    width:100%;
+    height:100%;
+    background:#eac8cf;
+    clip-path:polygon(0 0,100% 0,50% 60%);
+    transform-origin:top;
+    transition:1s cubic-bezier(.22,1,.36,1);
+    z-index:4;
+}
+.envelope-wrapper.open .flap{
+    transform:rotateX(180deg);
+}
+
+/* PHOTO */
+.photo{
+    position:absolute;
+    width:240px;
+    height:320px;
+    left:50%;
+    top:120px;
+    transform:translate(-50%,0) scale(.4);
+    opacity:0;
+    border-radius:18px;
+    overflow:hidden;
+    transition:1.2s cubic-bezier(.22,1,.36,1);
+    z-index:2;
+}
+.photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+.envelope-wrapper.open .photo{
+    top:-200px;
+    transform:translate(-50%,0) scale(1);
+    opacity:1;
+    z-index:5;
+}
+
+/* TEXT */
+.text1{
+    margin-top:40px;
+    max-width:400px;
+    font-weight:300;
+    line-height:1.6;
+    opacity:0;
+    transform:translateY(20px);
+    transition:all 1s cubic-bezier(.22,1,.36,1);
+}
+.envelope-wrapper.open ~ .text1{
+    opacity:1;
+    transform:translateY(0);
+}
+
+/* NAV */
+.nav{
+    position:absolute;
+    bottom:40px;
+    font-size:28px;
+    cursor:pointer;
+}
+.left{left:30px;}
+.right{right:30px;}
+
+/* ===== VINYL ===== */
+.vinyl-wrapper{
+    position:relative;
+    width:300px;
+    height:260px;
+}
+.album{
+    position:absolute;
+    width:200px;
+    height:200px;
+    background:#b71c1c;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:2;
+    box-shadow:0 20px 60px rgba(0,0,0,.7);
+    border-radius:4px;
+}
+
+.album img{width:200 px;height: 200px;}
+.vinyl{
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:-100px;
+    top:0;
+    border-radius:50%;
+    background:
+        radial-gradient(circle at 50% 50%, #1a1a1a 0%, #000 60%, #000 100%);
+    box-shadow:
+        inset 0 0 40px rgba(255,255,255,0.05),
+        inset 0 0 80px rgba(255,255,255,0.03),
+        0 20px 50px rgba(0,0,0,.8);
+    animation:spin 3.5s linear infinite;
+    animation-play-state:paused;
+    overflow:hidden;
+}
+
+/* GROOVE LINES */
+.vinyl::before{
+    content:"";
+    position:absolute;
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    background:
+        repeating-radial-gradient(
+            circle,
+            rgba(255,255,255,0.03) 0px,
+            rgba(255,255,255,0.03) 1px,
+            transparent 2px,
+            transparent 4px
+        );
+}
+
+/* CENTER LABEL */
+.vinyl::after{
+    content:"";
+    position:absolute;
+    width:70px;
+    height:70px;
+    background:radial-gradient(circle,#b71c1c 40%,#7b0000 100%);
+    border-radius:50%;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    box-shadow:0 0 15px rgba(0,0,0,.6);
+}
+
+/* SHINE EFFECT */
+.vinyl-wrapper::after{
+    content:"";
+    position:absolute;
+    width:260px;
+    height:260px;
+    right:-100px;
+    top:0;
+    border-radius:50%;
+    background:linear-gradient(
+        120deg,
+        rgba(255,255,255,0.25) 0%,
+        rgba(255,255,255,0.08) 30%,
+        transparent 60%
+    );
+    pointer-events:none;
+}
+@keyframes spin{
+    from{transform:rotate(0deg);}
+    to{transform:rotate(360deg);}
+}
+
+
+.play-btn{
+    margin-top:30px;
+    padding:10px 25px;
+    border:none;
+    border-radius:20px;
+    background:white;
+    color:#b71c1c;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="universe"><div class="stars"></div></div>
+<div class="blur-bg" id="blur"></div>
+<div class="transition-overlay" id="transition"></div>
+
+<!-- SLIDE 1 -->
+<div class="slide active">
+    <h2>TES</h2>
+
+    <div class="envelope-wrapper" id="wrapper">
+        <div class="envelope" onclick="toggleEnvelope()">
+            <div class="flap"></div>
+        </div>
+        <div class="photo">
+            <img src="foto.jpeg">
+        </div>
+    </div>
+
+    <div class="text1">
+TES TES TES
+    </div>
+
+    <div class="nav right" onclick="nextSlide()">➜</div>
+</div>
+
+<!-- SLIDE 2 -->
+<div class="slide">
+    <h2>Start The Journey</h2>
+
+    <div class="vinyl-wrapper">
+        <div class="album">
+            <img src="cover.jpeg">
+        </div>
+        <div class="vinyl" id="vinyl"></div>
+    </div>
+
+    <button class="play-btn" id="playBtn" onclick="toggleMusic()">
+        ▶ Play Lagu
+    </button>
+
+
+    <div class="nav left" onclick="prevSlide()">⬅</div>
+    <div class="nav right" onclick="nextSlide()">➜</div>
+</div>
+
+<!-- SLIDE 3 -->
+<div class="slide">
+    <h2>Invitation 🍷</h2>
+    <p>📍 </p>
+    <p>🗓 29 Februari 2026</p>
+    <p>⏰ 19.00 WIB</p>
+
+    <div class="nav left" onclick="prevSlide()">⬅</div>
+</div>
+
+<audio id="music" loop>
+    <source src="lagu.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+let wrapper=document.getElementById("wrapper");
+let blur=document.getElementById("blur");
+let slides=document.querySelectorAll(".slide");
+let transition=document.getElementById("transition");
+let current=0;
+let music=document.getElementById("music");
+let vinyl=document.getElementById("vinyl");
+let isPlaying=false;
+
+/* Envelope */
+function toggleEnvelope(){
+    wrapper.classList.toggle("open");
+
+    if(wrapper.classList.contains("open")){
+        blur.classList.add("active");
+    }else{
+        blur.classList.remove("active");
+    }
+}
+
+/* Slide */
+function showSlide(index){
+    if(index===current) return;
+
+    slides[current].classList.add("exit");
+    transition.classList.add("active");
+
+    setTimeout(()=>{
+        slides[current].classList.remove("active","exit");
+        current=index;
+        slides[current].classList.add("active");
+
+        setTimeout(()=>{
+            transition.classList.remove("active");
+        },400);
+
+    },600);
+}
+
+function nextSlide(){
+    if(current<slides.length-1) showSlide(current+1);
+}
+function prevSlide(){
+    if(current>0) showSlide(current-1);
+}
+
+let nextBtn = document.getElementById("nextAfterPlay");
+let playBtn = document.getElementById("playBtn");
+
+function toggleMusic(){
+    if(!isPlaying){
+        music.play();
+        vinyl.style.animationPlayState="running";
+        isPlaying=true;
+
+        playBtn.innerHTML="⏸ Pause Lagu";
+
+        setTimeout(()=>{
+            nextBtn.style.display="block";
+        },2000);
+
+    }else{
+        music.pause();
+        vinyl.style.animationPlayState="paused";
+        isPlaying=false;
+
+        playBtn.innerHTML="▶ Play Lagu";
+    }
+
+
+}
+</script>
+
+</body>
+</html>
